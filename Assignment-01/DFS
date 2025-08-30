@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+bool dfsUtil(int u, int goal, vector<vector<int>>& adj, vector<int>& parent, vector<int>& visited) {
+    visited[u] = 1;
+    if(u == goal) return true;
+    for(int v : adj[u]) {
+        if(!visited[v]) {
+            parent[v] = u;
+            if(dfsUtil(v, goal, adj, parent, visited)) return true;
+        }
+    }
+    return false;
+}
+
+void DFS(int n, vector<vector<int>>& adj, int start, int goal) {
+    vector<int> parent(n, -1), visited(n, 0);
+    bool found = dfsUtil(start, goal, adj, parent, visited);
+
+    if(!found) {
+        cout << "DFS: Goal not found\n";
+        return;
+    }
+    // reconstruct path
+    vector<int> path;
+    for(int cur = goal; cur != -1; cur = parent[cur]) path.push_back(cur);
+    reverse(path.begin(), path.end());
+
+    cout << "DFS Path: ";
+    for(int v : path) cout << v << " ";
+    cout << "\n(No cost calculation — DFS not cost-aware)\n";
+}
+
+int main() {
+    int n = 7;
+    vector<vector<int>> adj(n);
+    adj[0] = {1,2};
+    adj[1] = {3,4};
+    adj[2] = {5};
+    adj[5] = {6};
+    int start=0, goal=6;
+    DFS(n, adj, start, goal);
+}
